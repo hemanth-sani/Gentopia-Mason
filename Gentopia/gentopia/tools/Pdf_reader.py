@@ -23,6 +23,7 @@ class ReadPDFTool(BaseTool):
         try:
             if url:
                 response = requests.get(url)
+                print (response)
                 response.replace("abs","pdf")
                 response+=".pdf"
                 response.raise_for_status()

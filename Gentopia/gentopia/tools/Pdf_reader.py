@@ -5,53 +5,58 @@ from gentopia.tools.basetool import *
 from pydantic import Field
 from io import BytesIO
 import requests
-import fitz  # PyMuPDF
+from bs4 import BeautifulSoup
 
 
-class ReadPDFFromURLArgs(BaseModel):
-    url: str = Field(..., description="The URL of the PDF file to read")
-    file_path: str = Field(None, description="The path of the PDF file to read on the disk")
+class FetchAndReadPDFArgs(BaseModel):
+    url: str = Field(..., description="The URL to fetch the PDF from")
 
-class ReadPDFTool(BaseTool):
-    """Read PDF file from disk or URL"""
+class FetchAndReadPDFTool(BaseTool):
+    """Fetch and read PDF file from a URL"""
 
-    name = "ReadPDF"
-    description = "Read the contents of a PDF file from the hard disk or a URL."
-    args_schema: Optional[Type[BaseModel]] = ReadPDFFromURLArgs
+    name = "FetchAndReadPDF"
+    description = "Fetch a PDF from a URL and read its contents."
+    args_schema: Optional[Type[BaseModel]] = FetchAndReadPDFArgs
 
-    def _run(self, file_path: Optional[str] = None, url: Optional[str] = None) -> AnyStr:
+    def _run(self, url) -> AnyStr:
         try:
-            if url:
-                response = requests.get(url)
-                print (response.read().decode('utf-8'))
-                response.replace("abs","pdf")
-                response+=".pdf"
-                response.raise_for_status()
-                file_stream = BytesIO(response.content)
-                doc = fitz.open("pdf", file_stream)
-            elif file_path:
-                doc = fitz.open(file_path)
-            else:
-                return "Error: No file path or URL provided."
+            # Find PDF URL
+            response = requests.get(url)
+            soup = BeautifulSoup(response.text, 'html.parser')
+            pdf_url = None
+            for link in soup.find_all('a'):
+                href = link.get('href')
+                if href and '.pdf' in href:
+                    pdf_url = href
+                    break
 
+            if pdf_url is None:
+                return "PDF URL not found."
+
+            # Download PDF
+            response = requests.get(pdf_url)
+            if response.status_code != 200:
+                return "Failed to download PDF."
+
+            pdf_stream = BytesIO(response.content)
+
+            # Read PDF
+            reader = PdfReader(pdf_stream)
             text = ""
-            for page in doc:
-                text += page.get_text()
-            doc.close()
+            for page in reader.pages:
+                text += page.extract_text() or ""
+
             return text
 
-        except requests.RequestException as e:
-            return f"Request error: {e}"
         except Exception as e:
-            return f"Error: {e}"
+            return "Error: " + str(e)
 
     async def _arun(self, *args: Any, **kwargs: Any) -> Any:
         raise NotImplementedError
 
 if __name__ == "__main__":
-    pdf_url = "https://example.com/somefile.pdf"  # Replace with your actual PDF URL
-    ans = ReadPDFTool()._run(url=pdf_url)
-    # You can also use file_path argument to read from disk
-    # ans = ReadPDFTool()._run(file_path="example.pdf")
+    url = "http://example.com"  # Replace with the actual URL
+    ans = FetchAndReadPDFTool()._run(url)
     print(ans)
+
 

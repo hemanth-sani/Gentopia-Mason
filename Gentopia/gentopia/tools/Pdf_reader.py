@@ -22,9 +22,9 @@ class ReadPDFTool(BaseTool):
     def _run(self, file_path: Optional[str] = None, url: Optional[str] = None) -> AnyStr:
         try:
             if url:
-                url.replace("abs","pdf")
-                url+=".pdf"
                 response = requests.get(url)
+                response.replace("abs","pdf")
+                response+=".pdf"
                 response.raise_for_status()
                 file_stream = BytesIO(response.content)
                 doc = fitz.open("pdf", file_stream)

@@ -8,13 +8,13 @@ import requests
 
 
 class ReadPDFFromURLArgs(BaseModel):
-    url: str = Field(..., description="The URL of the PDF file to read")
+    url: str = Field(..., description="Reads the URL PDF")
 
 class ReadPDFTool(BaseTool):
-    """Read PDF file from disk or URL"""
+    """Reads the URL PDF"""
 
     name = "ReadPDF"
-    description = "Read the contents of a PDF file from the hard disk or a URL."
+    description = "Reads the URL PDF"
     args_schema: Optional[Type[BaseModel]] = ReadPDFFromURLArgs
 
     def _run(self, file_path: str = None, url: str = None) -> AnyStr:
@@ -49,10 +49,9 @@ class ReadPDFTool(BaseTool):
         raise NotImplementedError
 
 if __name__ == "__main__":
-    pdf_url = "https://example.com/somefile.pdf"  # Replace with your actual PDF URL
-    ans = ReadPDFTool()._run(url=pdf_url)
-    # You can also use file_path argument to read from disk
-    # ans = ReadPDFTool()._run(file_path="example.pdf")
-    print(ans)
+    pdf_url = "https://file.pdf"  
+    pdf = ReadPDFTool()._run(url=pdf_url)
+    
+    print(pdf)
 
 

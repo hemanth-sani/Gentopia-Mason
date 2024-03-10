@@ -26,7 +26,7 @@ class FetchAndReadPDFTool(BaseTool):
             pdf_url = None
             for link in soup.find_all('a'):
                 href = link.get('href')
-                if href and '.pdf' in href:
+                if href and '/pdf/*' in href:
                     pdf_url = href
                     break
 

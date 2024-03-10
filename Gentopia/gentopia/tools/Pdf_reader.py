@@ -20,7 +20,7 @@ class ReadPDFTool(BaseTool):
             text += page.extract_text() + "\n"
         return text
 
-    async def _arun(self, *args: Any, **kwargs: Any)) -> Any:
+    async def _arun(self, *args: Any, **kwargs: Any) -> Any:
         raise NotImplementedError
 
 

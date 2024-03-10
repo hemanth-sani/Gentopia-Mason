@@ -19,3 +19,11 @@ class ReadPDFTool(BaseTool):
         for page in reader.pages:
             text += page.extract_text() + "\n"
         return text
+
+    async def _arun(self, *args: Any) -> Any:
+        raise NotImplementedError
+
+
+if __name__ == "__main__":
+    ans = ReadPDFTool()._run("Attention for transformer")
+    print(ans)

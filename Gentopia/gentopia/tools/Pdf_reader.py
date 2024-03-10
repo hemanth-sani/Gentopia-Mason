@@ -30,7 +30,13 @@ class ReadPDFTool(BaseTool):
             reader = PdfReader(file)
             text = ""
             for page in reader.pages:
-                text += page.extract_text() or ""
+                page_text = page.extract_text() or ""
+                if len(text) + len(page_text) > 9000:
+                    text += page_text[:9000 - len(text)]
+                    break
+                else:
+                    text += page_text
+            
             file.close()
             return text
 

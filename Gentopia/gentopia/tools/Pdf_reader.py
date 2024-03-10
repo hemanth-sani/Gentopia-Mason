@@ -22,6 +22,8 @@ class ReadPDFTool(BaseTool):
     def _run(self, file_path: Optional[str] = None, url: Optional[str] = None) -> AnyStr:
         try:
             if url:
+                url.replace("abs","pdf")
+                url+=".pdf"
                 response = requests.get(url)
                 response.raise_for_status()
                 file_stream = BytesIO(response.content)

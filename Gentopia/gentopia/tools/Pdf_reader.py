@@ -4,7 +4,7 @@ from PyPDF2 import PdfReader
 from gentopia.tools.basetool import *
 from pydantic import Field
 from io import BytesIO
-
+import requests
 
 class ReadPDFFromURLArgs(BaseModel):
     url: str = Field(..., description="The URL of the PDF file to read")

@@ -193,7 +193,7 @@ class SearchSinglePaper(BaseTool):
                 'venue': it['bib']['venue'],
                 "abstract": it['bib']['abstract'],
                 'url': it['pub_url'],
-                'pdf_url': it['pdf_url'],
+                'pdf_url':it.get('eprint_url', 'Not available'),
                 'citation': it['num_citations'],
                 }))
         if not ans:

@@ -20,10 +20,10 @@ class ReadPDFTool(BaseTool):
             text += page.extract_text() + "\n"
         return text
 
-    async def _arun(self, *args: Any) -> Any:
+    async def _arun(self, *args: Any, **kwargs: Any)) -> Any:
         raise NotImplementedError
 
 
 if __name__ == "__main__":
-    ans = ReadPDFTool()._run("Attention for transformer")
+    ans = ReadPDFTool()._run("abc.pdf")
     print(ans)

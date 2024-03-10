@@ -5,9 +5,12 @@ from gentopia.tools.basetool import *
 from pydantic import Field
 from io import BytesIO
 import requests
+import fitz  # PyMuPDF
+
 
 class ReadPDFFromURLArgs(BaseModel):
     url: str = Field(..., description="The URL of the PDF file to read")
+    file_path: str = Field(None, description="The path of the PDF file to read on the disk")
 
 class ReadPDFTool(BaseTool):
     """Read PDF file from disk or URL"""
@@ -16,21 +19,22 @@ class ReadPDFTool(BaseTool):
     description = "Read the contents of a PDF file from the hard disk or a URL."
     args_schema: Optional[Type[BaseModel]] = ReadPDFFromURLArgs
 
-    def _run(self, file_path: str = None, url: str = None) -> AnyStr:
+    def _run(self, file_path: Optional[str] = None, url: Optional[str] = None) -> AnyStr:
         try:
             if url:
                 response = requests.get(url)
                 response.raise_for_status()
-                file = BytesIO(response.content)
+                file_stream = BytesIO(response.content)
+                doc = fitz.open("pdf", file_stream)
+            elif file_path:
+                doc = fitz.open(file_path)
             else:
-                pdf_path = Path(file_path)
-                file = open(pdf_path, 'rb')
-            
-            reader = PdfReader(file)
+                return "Error: No file path or URL provided."
+
             text = ""
-            for page in reader.pages:
-                text += page.extract_text() or ""
-            file.close()
+            for page in doc:
+                text += page.get_text()
+            doc.close()
             return text
 
         except requests.RequestException as e:
@@ -42,6 +46,9 @@ class ReadPDFTool(BaseTool):
         raise NotImplementedError
 
 if __name__ == "__main__":
-    pdf_url = "https://example.com/somefile.pdf"  
+    pdf_url = "https://example.com/somefile.pdf"  # Replace with your actual PDF URL
     ans = ReadPDFTool()._run(url=pdf_url)
+    # You can also use file_path argument to read from disk
+    # ans = ReadPDFTool()._run(file_path="example.pdf")
     print(ans)
+

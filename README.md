@@ -64,4 +64,27 @@ Sometimes an agent can upset you. To wipe it out completely,
 ```
 ./delete_agent <your_agent_name> 
 ```
+## 12th question for google seach and pdf reader
+THe google search is already been implemented and the tool is called google_search. For pdf reader I have used PyPDF2.
+This is the installation commend
+```
+pip install PyPDF2 
+```
+I have created a pdf reader tool which is located in tools called 'Pdf_reader' and added these tools to the scolar. You can clone the agent with the help of 
+```
+./clone_agent scholar <your_agent_name>
+```
+Now I have searched for a particlar paper and it returns pdf url where the pdf reader tool can read the contents.
+
+## Bonus question
+
+For this I have created new agent
+```
+./create_agent superbot
+```
+and I have given all the plugins.
+Now you can clone superbot where it can calculate, search in google and convert text to speech.
+
+
+
 

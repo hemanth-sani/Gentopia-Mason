@@ -9,3 +9,8 @@ from .vanilla_template import *
 from .openai_memory_template import *
 from .vanilla-ziyu import *
 from .scholar-ziyu import *
+from .bot import *
+from .scholar_bot import *
+from .scholar2_bot import *
+from .scholar_pdfbot import *
+from .superbot import *

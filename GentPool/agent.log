@@ -1,0 +1,15 @@
+INFO:root:Creating Config from file: ./gentpool/pool/superbot/agent.yaml
+INFO:root:Starting to load configuration from ./gentpool/pool/superbot/agent.yaml
+INFO:root:Successfully loaded configuration from ./gentpool/pool/superbot/agent.yaml
+INFO:root:--------------------
+INFO:root:[green]Welcome to Gentopia!
+INFO:root:--------------------
+INFO:root:[green]User: 
+INFO:root:superbot is thinking...
+INFO:root:Done
+INFO:root:[blue]superbot: 
+INFO:root:{"name":"text_to_image", "arguments":{
+  "text": "a dog"
+}}
+
+INFO:root:Calling function: text_to_image ...
